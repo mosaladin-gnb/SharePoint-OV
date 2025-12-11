@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>SharePoint Basics Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f3f4f7;
+      --bg-alt: #ffffff;
+      --border-soft: #d9dde6;
+      --accent: #4264b5;
+      --accent-soft: #e1e7f7;
+      --text-main: #02b887;
+      --text-soft: #5c6475;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.03);
+      --shadow-strong: 0 12px 28px rgba(0, 0, 0, 0.05);
+    }
+
+    /* DARK MODE OVERRIDES */
+    html[data-theme="dark"] {
+      --bg: #12141b;
+      --bg-alt: #191c25;
+      --border-soft: #2b3140;
+      --accent: #7c9bff;
+      --accent-soft: #293558;
+      --text-main: #b84b02;
+      --text-soft: #c3cfe8;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.6);
+      --shadow-strong: 0 16px 34px rgba(0, 0, 0, 0.7);
+    }
+
+    html {
+      font-size: 17px;
+      transition: background-color 0.25s ease-out, color 0.25s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+   /* shared body settings */
+body {
+  color: var(--text-main);
+  padding: 32px 16px 40px;
+  transition: background 0.25s ease-out, color 0.25s ease-out;
+}
+html, body {
+  height: auto;
+  min-height: 100%;
+  background-attachment: fixed;
+}
+
+/* LIGHT THEME gradient */
+html[data-theme="light"] body {
+  background: radial-gradient(
+    circle at top right,
+    #d3d5dd 0,        /* light highlight in corner */
+    var(--bg) 25%,
+    var(--bg) 100%
+  );
+}
+
+/* DARK THEME gradient */
+html[data-theme="dark"] body {
+  background: radial-gradient(
+    circle at top right,
+    #2f3446 0,        /* darker highlight in corner */
+    var(--bg) 30%,
+    var(--bg) 100%
+  );
+}
+
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+
+    header {
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .header-text { flex: 1; }
+
+    .main-title {
+      font-size: 2.8rem;
+      font-weight: 750;
+      letter-spacing: -0.03em;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .intro-text {
+      font-size: 1.05rem;
+      color: var(--text-soft);
+      max-width: 780px;
+      line-height: 1.7;
+    }
+
+    .theme-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-alt);
+      padding: 6px 14px;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      transition: background 0.2s ease-out, transform 0.15s ease-out, box-shadow 0.2s ease-out;
+    }
+    .theme-toggle span.icon { font-size: 1.1rem; }
+    .theme-toggle:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-strong);
+    }
+
+    /* PANELS */
+
+    .panel {
+      background: var(--bg-alt);
+      border-radius: 24px;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 22px 22px 22px;
+      animation: fadeUp 0.35s ease-out forwards;
+      opacity: 0;
+    }
+    .panel + .panel { margin-top: 28px; }
+
+    .panel h2 { font-size: 1.35rem; margin-bottom: 6px; }
+    .panel p {
+      color: var(--text-soft);
+      font-size: 0.98rem;
+      line-height: 1.6;
+    }
+
+    /* FILTERS */
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 9px 20px;
+      border: 1px solid var(--border-soft);
+      background: #ffffff;
+      font-size: 0.98rem;
+      cursor: pointer;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease-out;
+      user-select: none;
+    }
+    html[data-theme="dark"] .pill { background: #202331; }
+
+    .pill span.icon { font-size: 1.1rem; }
+
+    .pill.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    /* CARD STACK */
+
+    .card-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 10px;
+      padding: 26px 0;
+      border-top: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      padding: 22px 22px 18px;
+      border-radius: 20px;
+      background: var(--bg-alt);
+      border: 1px solid #e3e6ee;
+      transition: all 0.18s ease-out;
+      min-height: 150px;
+      box-shadow: 0 0 0 rgba(0,0,0,0);
+      opacity: 0;
+      animation: fadeUp 0.35s ease-out forwards;
+    }
+    html[data-theme="dark"] .card { border-color: #2b3140; }
+
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.09s; }
+    .card:nth-child(3) { animation-delay: 0.13s; }
+    .card:nth-child(4) { animation-delay: 0.17s; }
+    .card:nth-child(5) { animation-delay: 0.21s; }
+    .card:nth-child(6) { animation-delay: 0.25s; }
+    .card:nth-child(7) { animation-delay: 0.29s; }
+    .card:nth-child(8) { animation-delay: 0.33s; }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-strong);
+      border-color: var(--accent-soft);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 6px;
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 44px;
+      border: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f7fc;
+      font-size: 1.25rem;
+      color: var(--accent);
+    }
+    html[data-theme="dark"] .card-icon { background: #212537; }
+
+    .card-title { font-weight: 650; font-size: 1.35rem; }
+
+    .card-body {
+      font-size: 1.02rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .tag-pill {
+      border-radius: 999px;
+      padding: 5px 12px;
+      border: 1px solid var(--border-soft);
+      background: #f6f7fb;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+    }
+    html[data-theme="dark"] .tag-pill { background: #252a3b; }
+
+    .card-footer {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+
+    /* FOOTER */
+
+    footer {
+      margin-top: 22px;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    footer span.label { font-weight: 550; color: var(--text-main); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- HEADER -->
+    <header>
+      <div class="header-text">
+        <h1 class="main-title">SharePoint 101</h1>
+        <p class="intro-text">
+          A focused starting hub to explain what SharePoint is, how it connects with Microsoft&nbsp;365 and Teams,
+          and the core navigation and collaboration patterns for new users.
+        </p>
+      </div>
+      <button class="theme-toggle" id="themeToggle">
+        <span class="icon">🌓</span>
+        <span class="label">Toggle theme</span>
+      </button>
+    </header>
+
+    <!-- MODULE CARDS PANEL -->
+    <section class="panel">
+      <h2>Explore modules</h2>
+      <p>Select a track or filter by topic. Click any card to open the detailed module.</p>
+
+      <div class="filter-row" id="filters">
+        <button class="pill active" data-filter="all">
+          <span class="icon">✨</span>All
+        </button>
+        <button class="pill" data-filter="basics">
+          <span class="icon">📘</span>Basics
+        </button>
+        <button class="pill" data-filter="navigation">
+          <span class="icon">🧭</span>Navigation
+        </button>
+        <button class="pill" data-filter="files">
+          <span class="icon">📂</span>Files &amp; Lists
+        </button>
+        <button class="pill" data-filter="collab">
+          <span class="icon">🤝</span>Collaboration
+        </button>
+        <button class="pill" data-filter="admin">
+          <span class="icon">🛠</span>Admin &amp; Governance
+        </button>
+      </div>
+
+      <div class="card-grid" id="cardGrid">
+        <!-- CARD 1 -->
+        <article class="card" data-category="basics"
+                 onclick="openModule('Files/sp-basics-overview.html')">
+          <div class="card-header">
+            <div class="card-icon">SP</div>
+            <div class="card-title">What is SharePoint?</div>
+          </div>
+          <div class="card-body">
+            Discover what SharePoint actually does for you. Learn how it stores files, supports teamwork,
+and connects with tools you already use—like Teams and OneDrive. By the end, you’ll understand
+where SharePoint fits and why you’ll use it every day.
+
+          </div>
+          <div class="card-tags">
+            <span class="tag-pill">Overview</span>
+            <span class="tag-pill">Cloud vs Server</span>
+          </div>
+          <div class="card-footer">
+            <span>≈ 5–7 min</span>
+          </div>
+        </article>
+
+        <!-- CARD 2 -->
+        <article class="card" data-category="navigation"
+                 onclick="openModule('Files/sp-navigation-sites.html')">
+          <div class="card-header">
+            <div class="card-icon">🧭</div>
+            <div class="card-title">Sites &amp; navigation</div>
+          </div>
+          <div class="card-body">
+            Learn how to get into SharePoint, move confidently between sites, and understand the layout
+you’ll see on every SharePoint page. This module helps you find your way fast and recognise
+where files, pages, and apps live.
+
+          </div>
+          <div class="card-tags">
+            <span class="tag-pill">Microsoft&nbsp;365</span>
+            <span class="tag-pill">Site layout</span>
+          </div>
+          <div class="card-footer">
+            <span>≈ 7–10 min</span>
+          </div>
+        </article>
+
+        <!-- CARD 3 -->
+        <article class="card" data-category="files"
+                 onclick="openModule('Files/sp-files-lists.html')">
+          <div class="card-header">
+            <div class="card-icon">📂</div>
+            <div class="card-title">Working with files &amp; lists</div>
+          </div>
+          <div class="card-body">
+           Learn the essentials of working in SharePoint: uploading files, using document libraries,
+tracking versions, editing lists, and understanding how SharePoint syncs with OneDrive and Teams.
+Everything you need to manage your day-to-day work smoothly.
+
+          </div>
+          <div class="card-tags">
+            <span class="tag-pill">Libraries</span>
+            <span class="tag-pill">Lists</span>
+            <span class="tag-pill">Versioning</span>
+          </div>
+          <div class="card-footer">
+            <span>≈ 10–12 min</span>
+          </div>
+        </article>
+
+        <!-- CARD 4 -->
+        <article class="card" data-category="collab"
+                 onclick="openModule('Files/sp-sharing-permissions.html')">
+          <div class="card-header">
+            <div class="card-icon">🤝</div>
+            <div class="card-title">Sharing &amp; permissions</div>
+          </div>
+          <div class="card-body">
+Understand how sharing works in SharePoint—who can see your files, how access levels work,
+and how to share safely inside or outside your organisation. You’ll learn how to choose the
+right level of access and avoid common permission mistakes.
+
+          </div>
+          <div class="card-tags">
+            <span class="tag-pill">Sharing</span>
+            <span class="tag-pill">Access</span>
+          </div>
+          <div class="card-footer">
+            <span>≈ 6–8 min</span>
+          </div>
+        </article>
+
+        <!-- CARD 5 -->
+        <article class="card" data-category="admin"
+                 onclick="openModule('Files/sp-governance-template.html')">
+          <div class="card-header">
+            <div class="card-icon">🛡</div>
+            <div class="card-title">Governance &amp; best practices</div>
+          </div>
+          <div class="card-body">
+Learn the habits that keep SharePoint clean, organised, and easy for everyone to use.
+This module explains naming standards, ownership responsibilities, lifecycle basics,
+and what good site management looks like in real life.
+
+          </div>
+          <div class="card-tags">
+            <span class="tag-pill">Admins</span>
+            <span class="tag-pill">Owners</span>
+          </div>
+          <div class="card-footer">
+            <span>≈ 8–10 min</span>
+          </div>
+        </article>
+
+        <!-- CARD 6 – Compatibility & tools -->
+        <article class="card" data-category="collab"
+                 onclick="openModule('Files/sp-compat-tools.html')">
+          <div class="card-header">
+            <div class="card-icon">⇄</div>
+            <div class="card-title">SharePoint and Teams Work Together</div>
+          </div>
+          <div class="card-body">
+            Visual overview of how SharePoint and Teams work together, the difference between
+            site types, and how permissions map across both.
+          </div>
+          <div class="card-tags">
+            <span class="tag-pill">Teams ↔ SharePoint</span>
+            <span class="tag-pill">Site types</span>
+          </div>
+          <div class="card-footer">
+            <span>≈ 6–9 min</span>
+          </div>
+        </article>
+
+        <!-- CARD 7 – Top 10 mistakes -->
+        <article class="card" data-category="basics"
+                 onclick="openModule('Files/sp-top10-mistakes.html')">
+          <div class="card-header">
+            <div class="card-icon">⚠️</div>
+            <div class="card-title">Top 10 SharePoint mistakes</div>
+          </div>
+          <div class="card-body">
+            Common pitfalls that make sites messy, slow or confusing – and how to avoid them
+            when you build new sites or libraries.
+          </div>
+          <div class="card-tags">
+            <span class="tag-pill">Do &amp; Don’t</span>
+            <span class="tag-pill">Good practice</span>
+          </div>
+          <div class="card-footer">
+            <span>≈ 8–10 min</span>
+          </div>
+        </article>
+
+        <!-- CARD 8 – Cheat sheet -->
+        <article class="card" data-category="basics"
+                 onclick="openModule('Files/sp-top10-cheats.html')">
+          <div class="card-header">
+            <div class="card-icon">💡</div>
+            <div class="card-title">Top 10 power moves</div>
+          </div>
+          <div class="card-body">
+            A quick action-based cheat sheet: the most useful things everyday users can do in
+            SharePoint to work faster and smarter.
+          </div>
+          <div class="card-tags">
+            <span class="tag-pill">Cheat sheet</span>
+            <span class="tag-pill">Power tips</span>
+          </div>
+          <div class="card-footer">
+            <span>≈ 8–10 min</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div>
+        <span class="label">Share Point Presentation|</span>
+        2025
+      </div>
+         </footer>
+  </div>
+
+  <script>
+    // Theme persistence
+    const html = document.documentElement;
+    const storedTheme = localStorage.getItem("spTheme");
+    if (storedTheme === "dark" || storedTheme === "light") {
+      html.dataset.theme = storedTheme;
+    }
+
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle.addEventListener("click", () => {
+      const newTheme = html.dataset.theme === "dark" ? "light" : "dark";
+      html.dataset.theme = newTheme;
+      localStorage.setItem("spTheme", newTheme);
+    });
+
+    // Filtering logic
+    const filterButtons = document.querySelectorAll(".pill");
+    const cards = document.querySelectorAll(".card");
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const filter = btn.getAttribute("data-filter");
+
+        filterButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        cards.forEach(card => {
+          const cat = card.getAttribute("data-category");
+          if (filter === "all" || filter === cat) {
+            card.style.display = "flex";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      });
+    });
+
+    function openModule(fileName) {
+      window.location.href = fileName;
+      // window.open(fileName, "_blank"); // use if you prefer new tabs
+    }
+  </script>
+</body>
+</html>

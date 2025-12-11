@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Compatibility &amp; tools – SharePoint &amp; Teams</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f3f4f7;
+      --bg-alt: #ffffff;
+      --border-soft: #d9dde6;
+      --accent: #4264b5;
+      --accent-soft: #e1e7f7;
+      --text-main: #02b887;
+      --text-soft: #5c6475;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.03);
+      --shadow-strong: 0 12px 28px rgba(0, 0, 0, 0.05);
+    }
+
+    /* DARK MODE OVERRIDES */
+    html[data-theme="dark"] {
+      --bg: #12141b;
+      --bg-alt: #191c25;
+      --border-soft: #2b3140;
+      --accent: #b84b02;
+      --accent-soft: #293558;
+      --text-main: #b84b02;
+      --text-soft: #c3cfe8;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.6);
+      --shadow-strong: 0 16px 34px rgba(0, 0, 0, 0.7);
+    }
+
+    html {
+      font-size: 17px;
+      transition: background-color 0.25s ease-out, color 0.25s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    /* shared body settings */
+    body {
+      color: var(--text-main);
+      padding: 32px 16px 40px;
+      transition: background 0.25s ease-out, color 0.25s ease-out;
+    }
+html, body {
+  height: auto;
+  min-height: 100%;
+  background-attachment: fixed;
+}
+
+    /* LIGHT THEME gradient */
+    html[data-theme="light"] body {
+      background: radial-gradient(
+        circle at top right,
+        #d3d5dd 0,        /* light highlight in corner */
+        var(--bg) 25%,
+        var(--bg) 100%
+      );
+    }
+
+    /* DARK THEME gradient */
+    html[data-theme="dark"] body {
+      background: radial-gradient(
+        circle at top right,
+        #2f3446 0,
+        var(--bg) 30%,
+        var(--bg) 100%
+      );
+    }
+
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+ /* Shared header buttons (Back + Theme toggle) */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 10px;
+    }
+
+    .back-link,
+    .theme-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-alt);
+      padding: 6px 14px;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .back-link {
+      padding: 6px 12px;
+    }
+
+    .theme-toggle span.icon {
+      font-size: 1.1rem;
+    }
+
+
+    header {
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 720;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .subtitle {
+      font-size: 0.98rem;
+      color: var(--text-soft);
+      max-width: 760px;
+      line-height: 1.6;
+    }
+
+    .panel {
+      background: var(--bg-alt);
+      border-radius: 24px;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 22px 22px 26px;
+      margin-top: 14px;
+      animation: fadeUp 0.35s ease-out forwards;
+      opacity: 0;
+    }
+
+    .panel h2 {
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+    }
+
+    .panel p {
+      font-size: 0.96rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    /* INFOGRAPHIC LAYOUT */
+
+    .infographic {
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) 140px minmax(0, 1.1fr);
+      gap: 12px;
+      align-items: stretch;
+      opacity: 0;
+      animation: fadeUp 0.35s ease-out forwards;
+    }
+
+    .info-row:nth-child(1) { animation-delay: 0.05s; }
+    .info-row:nth-child(2) { animation-delay: 0.09s; }
+    .info-row:nth-child(3) { animation-delay: 0.13s; }
+    .info-row:nth-child(4) { animation-delay: 0.17s; }
+
+    .info-side {
+      background: #f7f8fc;
+      border-radius: 18px;
+      border: 1px solid var(--border-soft);
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    html[data-theme="dark"] .info-side {
+      background: #202333;
+    }
+
+    .info-side h3 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+
+    .info-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 0;
+      position: relative;
+    }
+
+    .info-center::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #e0e3eb;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 0;
+    }
+
+    html[data-theme="dark"] .info-center::before {
+      background: #30364a;
+    }
+
+    .icon-group {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 40px;
+      border: 1px solid var(--border-soft);
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: var(--accent);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+    }
+
+    html[data-theme="dark"] .icon-circle {
+      background: #191c25;
+    }
+
+    .icon-label {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* TABLES */
+
+    .tables-wrap {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .table-block {
+      background: #f7f8fc;
+      border-radius: 18px;
+      border: 1px solid var(--border-soft);
+      padding: 14px 16px 16px;
+      animation: fadeUp 0.35s ease-out forwards;
+      opacity: 0;
+    }
+
+    .table-block:nth-child(1) { animation-delay: 0.2s; }
+    .table-block:nth-child(2) { animation-delay: 0.24s; }
+
+    html[data-theme="dark"] .table-block {
+      background: #202333;
+    }
+
+    .table-block h3 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .table-block p {
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+
+    table.compare {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    table.compare th,
+    table.compare td {
+      border: 1px solid var(--border-soft);
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    table.compare th {
+      background: #eef0f7;
+      font-weight: 600;
+    }
+
+    html[data-theme="dark"] table.compare th {
+      background: #252a3c;
+    }
+
+    @media (max-width: 900px) {
+      .info-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .info-center::before {
+        display: none;
+      }
+      .tables-wrap {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+<div class="top-bar">
+  <button class="back-link" onclick="window.location.href='../Index.html'">
+    ‹ Back to hub
+  </button>
+  <button class="theme-toggle" id="themeToggle">
+    <span class="icon">🌓</span>
+    <span class="label">Toggle theme</span>
+  </button>
+</div>
+
+
+    <header>
+      <h1>How SharePoint and Teams Work Together
+</h1>
+      <p class="subtitle">
+  This page gives you a clear, visual breakdown of how SharePoint and Microsoft Teams connect behind the scenes.
+  You'll learn the difference between Team sites and Communication sites, how creating a team automatically
+  creates a SharePoint site, and how permissions and membership flow between both tools. Use this as a quick
+  reference whenever you're unsure how the two systems interact.
+</p>
+    </header>
+
+    <section class="panel">
+      <h2>Visual overview</h2>
+      <p>
+  The diagrams below show the most common SharePoint and Teams relationships in a simple,
+  side-by-side format. Each row highlights one concept so you can quickly understand how the pieces fit 
+  together—whether you're working in a Team, sharing files, or managing a SharePoint site.
+</p>
+
+      <div class="infographic">
+        <!-- ROW A -->
+        <div class="info-row">
+          <div class="info-side">
+            <h3>Team site</h3>
+            <p>
+  A Team site is designed for day-to-day collaboration. It’s where smaller groups work together on shared
+  files, tasks, lists, and discussions. 
+            </p>
+          </div>
+          <div class="info-center">
+            <div class="icon-group">
+              <div class="icon-circle">A</div>
+              <div class="icon-label"> <strong>Site types</strong></div>
+            </div>
+          </div>
+          <div class="info-side">
+            <h3>Communication site</h3>
+            <p>
+               A Communication site is built for sharing information more broadly. It’s ideal for news, announcements,
+  and content meant for a larger audience such as a whole branch or organisation.
+            </p>
+          </div>
+        </div>
+
+        <!-- ROW B -->
+        <div class="info-row">
+          <div class="info-side">
+            <h3>SharePoint view</h3>
+            <p>
+ SharePoint stores the pages, documents, and lists that make up the structure of your site.
+  When you open the Files tab in a Team channel, you’re actually looking at the SharePoint library behind it.
+            </p>
+          </div>
+          <div class="info-center">
+            <div class="icon-group">
+              <div class="icon-circle">B</div>
+              <div class="icon-label"><strong>SP ↔ Teams</strong></div>
+            </div>
+          </div>
+          <div class="info-side">
+            <h3>Teams view</h3>
+            <p>
+             Teams provides the communication layer—chat, meetings, channels, and collaboration.
+  It displays file content from SharePoint so everything feels connected in one place.
+            </p>
+          </div>
+        </div>
+
+        <!-- ROW C -->
+        <div class="info-row">
+          <div class="info-side">
+            <h3>Microsoft&nbsp;365 group</h3>
+            <p>
+ When you create a Team, Microsoft 365 automatically creates a group with defined owners and members.
+  This group becomes the shared identity used across Teams, SharePoint, Planner, and other tools.
+            </p>
+          </div>
+          <div class="info-center">
+            <div class="icon-group">
+              <div class="icon-circle">C</div>
+              <div class="icon-label"><strong>Team creation</strong></div>
+            </div>
+          </div>
+          <div class="info-side">
+            <h3>SharePoint team site</h3>
+            <p>
+  At the same time, a SharePoint Team site is generated in the background.
+  Each standard channel inside Teams maps to a folder in that site’s main document library.
+            </p>
+          </div>
+        </div>
+
+        <!-- ROW D -->
+        <div class="info-row">
+          <div class="info-side">
+            <h3>Teams membership</h3>
+            <p>
+  Teams membership determines who can participate in conversations, attend meetings, and access standard
+  channels. Owners manage the membership and settings for the workspace.
+            </p>
+          </div>
+          <div class="info-center">
+            <div class="icon-group">
+              <div class="icon-circle">D</div>
+              <div class="icon-label"><strong>Permissions</strong></div>
+            </div>
+          </div>
+          <div class="info-side">
+            <h3>SharePoint permissions</h3>
+            <p>
+               SharePoint uses the same Microsoft 365 group to control site access.  
+  You can also apply additional, more detailed permissions within SharePoint if a file or folder needs 
+  different access rules.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    
+ <script>
+  const html = document.documentElement;
+  const storedTheme = localStorage.getItem("spTheme");
+
+  if (storedTheme === "dark" || storedTheme === "light") {
+    html.dataset.theme = storedTheme;
+  }
+
+  const themeToggle = document.getElementById("themeToggle");
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const newTheme = html.dataset.theme === "dark" ? "light" : "dark";
+      html.dataset.theme = newTheme;
+      localStorage.setItem("spTheme", newTheme);
+    });
+  }
+</script>
+
+</body>
+</html>

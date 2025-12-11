@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>SharePoint Basics – Sites & Navigation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f3f4f7;
+      --bg-alt: #ffffff;
+      --border-soft: #d9dde6;
+      --accent: #02b887;
+      --accent-soft: #e1e7f7;
+      --text-main: #02b887;
+      --text-soft: #5c6475;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.03);
+      --shadow-strong: 0 12px 28px rgba(0, 0, 0, 0.05);
+    }
+
+    /* DARK MODE OVERRIDES */
+    html[data-theme="dark"] {
+      --bg: #12141b;
+      --bg-alt: #191c25;
+      --border-soft: #2b3140;
+      --accent: #b84b02;
+      --accent-soft: #293558;
+      --text-main: #b84b02;
+      --text-soft: #c3cfe8;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.6);
+      --shadow-strong: 0 16px 34px rgba(0, 0, 0, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    html {
+      font-size: 17px;
+      transition: background-color 0.25s ease-out, color 0.25s ease-out;
+    }
+
+    /* shared body settings */
+    body {
+      color: var(--text-main);
+      padding: 32px 16px 40px;
+      transition: background 0.25s ease-out, color 0.25s ease-out;
+    }
+html, body {
+  height: auto;
+  min-height: 100%;
+  background-attachment: fixed;
+}
+
+    /* LIGHT THEME gradient */
+    html[data-theme="light"] body {
+      background: radial-gradient(
+        circle at top right,
+        #d3d5dd 0,
+        var(--bg) 25%,
+        var(--bg) 100%
+      );
+    }
+
+    /* DARK THEME gradient */
+    html[data-theme="dark"] body {
+      background: radial-gradient(
+        circle at top right,
+        #2f3446 0,
+        var(--bg) 30%,
+        var(--bg) 100%
+      );
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--bg-alt);
+      border-radius: 22px;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-strong);
+      padding: 22px 24px 26px;
+    }
+
+    html[data-theme="dark"] .wrap {
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    /* top bar & buttons (same as other modules) */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 10px;
+    }
+
+    .back-link,
+    .theme-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-alt);
+      padding: 6px 14px;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .back-link {
+      padding: 6px 12px;
+    }
+
+    .theme-toggle .icon {
+      font-size: 1.1rem;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--text-soft);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 22px;
+      margin-top: 18px;
+    }
+
+    .section-block {
+      border-radius: 18px;
+      border: 1px solid var(--border-soft);
+      background: #fafbfe;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    html[data-theme="dark"] .section-block {
+      background: #202333;
+    }
+
+    .section-block h2 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .section-block p,
+    .section-block li {
+      font-size: 0.92rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    .section-block ul {
+      margin-left: 18px;
+      margin-top: 4px;
+    }
+
+    .steps {
+      counter-reset: step;
+      list-style: none;
+      margin-left: 0;
+    }
+
+    .steps li {
+      position: relative;
+      padding-left: 34px;
+      margin-bottom: 8px;
+    }
+
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      background: var(--bg-alt);
+      color: var(--text-soft);
+    }
+
+/* Collapsible expander block */
+.expander {
+  margin-top: 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 10px 14px;
+  background: var(--bg-alt);
+  box-shadow: var(--shadow-soft);
+}
+
+.expander summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--accent);
+  outline: none;
+}
+
+.expander[open] summary {
+  color: var(--text-main);
+}
+
+.expander-content {
+  margin-top: 10px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+    .callout {
+      border-radius: 16px;
+      border: 1px dashed var(--border-soft);
+      padding: 10px 12px;
+      font-size: 0.86rem;
+      color: var(--text-soft);
+      background: #ffffff;
+      margin-top: 8px;
+    }
+
+    html[data-theme="dark"] .callout {
+      background: #191c25;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .top-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top-bar">
+      <button class="back-link" onclick="window.location.href='../Index.html'">
+        ‹ Back to hub
+      </button>
+      <button class="theme-toggle" id="themeToggle">
+        <span class="icon">🌓</span>
+        <span class="label">Toggle theme</span>
+      </button>
+    </div>
+
+    <div class="top-row">
+      <div>
+        <h1>Sites &amp; navigation</h1>
+        <p class="subtitle">
+          How to get into SharePoint and find their way around key sites.
+        </p>
+   
+    <div class="layout">
+   
+   <section>
+    <div class="section-block">
+  <h2>Inside a team site</h2>
+  <p>
+    Every SharePoint team site has a predictable layout designed to help teams work together, store files,
+    share updates, and manage ongoing tasks. Once you recognise the key parts, you’ll be able to navigate
+    any site with confidence — whether it belongs to your team or a completely different department.
+  </p>
+
+<details class="expander">
+  <summary class="expander-title"><strong>Team Site Contents</strong></summary>
+
+  <div class="expander-content">
+<call>  
+<ul>
+    <li>
+      <strong>Top navigation</strong> — links to important pages your team uses frequently, such as dashboards,
+      policies, procedures, project pages, calendars, or custom apps. Admins can rename or reorder these links,
+      so layouts may vary slightly from site to site.
+    </li>
+
+    <li>
+      <strong>Left navigation (Quick Launch)</strong> — your main menu for content. This usually includes:
+      <ul style="margin-top:6px; margin-bottom:6px;">
+        <li>the <strong>Documents</strong> library (all team files live here)</li>
+        <li><strong>Site Pages</strong> (news posts, landing pages, announcements)</li>
+        <li>team <strong>Lists</strong> (task trackers, registers, logs, forms, etc.)</li>
+        <li><strong>Recycle bin</strong> (restoring things you accidentally deleted)</li>
+      </ul>
+      It’s the quickest way to move between files, pages, and tools.
+    </li>
+
+    <li>
+      <strong>Home page</strong> — the site’s main entry point. It often includes:
+      <ul style="margin-top:6px; margin-bottom:6px;">
+        <li><strong>News</strong> updates or team announcements</li>
+        <li><strong>Quick links</strong> to important files or external apps</li>
+        <li><strong>Activity feed</strong> showing recent edits and updates</li>
+        <li><strong>Hero banners</strong> or featured content for visibility</li>
+      </ul>
+      Each team customises this differently — some keep it simple, others build full dashboards.
+    </li>
+
+    <li>
+      <strong>Document libraries</strong> — the heart of most team sites. Libraries include:
+      <ul style="margin-top:6px; margin-bottom:6px;">
+        <li><strong>Version history</strong> for tracking changes</li>
+        <li><strong>Columns</strong> for metadata (status, owner, dates, etc.)</li>
+        <li><strong>Views</strong> to filter or sort content</li>
+        <li><strong>Folder structure</strong> or metadata-based organisation</li>
+        <li><strong>Integration with Teams</strong> — everything appears in the Files tab</li>
+      </ul>
+      If you’re unsure where something lives, the Documents library is the best place to check first.
+    </li>
+
+    <li>
+      <strong>Lists</strong> — lightweight databases used to track tasks, requests, issues, contacts,
+      onboarding steps, and more. They look simple but are powerful and fully searchable.
+    </li>
+
+    <li>
+      <strong>Pages &amp; news posts</strong> — published content used to communicate updates, share guides,
+      or highlight important information. Pages support rich layouts, images, web parts, and embedded content.
+    </li>
+
+    <li>
+      <strong>Site settings</strong> — available only to Owners. This is where admins manage:
+      <ul style="margin-top:6px; margin-bottom:6px;">
+        <li>permissions and access controls</li>
+        <li>site theme and appearance</li>
+        <li>navigation structure</li>
+        <li>advanced library settings</li>
+      </ul>
+      Regular members won’t see these options, so don’t worry if they’re not visible.
+    </li>
+
+    <li>
+      <strong>Connected Microsoft 365 tools</strong> — SharePoint team sites automatically link to:
+      <ul style="margin-top:6px; margin-bottom:6px;">
+        <li><strong>Teams</strong> — channels reflect folders in Documents</li>
+        <li><strong>Planner</strong> — tasks can be surfaced in the site</li>
+        <li><strong>OneNote</strong> — team notebook stored in the site</li>
+        <li><strong>Power Automate</strong> — automated workflows triggered by file/list activity</li>
+      </ul>
+   <p>
+ This is why SharePoint is considered the “backbone” of team collaboration in Microsoft 365.
+</div>
+</details>
+  
+
+  <div class="callout">
+    A good way to learn: open a site you use often and explore each of these areas.
+    Once you understand the layout, every other SharePoint site becomes easier to navigate.
+  </div>
+</div>
+
+
+
+      <div class="section-block">
+  <h2>Try it yourself: simple navigation practice</h2>
+  <p>
+    You can follow these steps in any SharePoint environment. They’re quick, hands-on actions that help you
+    understand how sites behave and how to move confidently between them.
+  </p>
+  <ul class="steps">
+    <li>Open a team site you use regularly and explore its home page.</li>
+    <li>Click through the top navigation links and notice how each area changes.</li>
+    <li>Use the left navigation to open the <strong>Documents</strong> library and explore folders.</li>
+    <li>Go back to the SharePoint start page and open a different site — compare their layouts.</li>
+    <li>In Microsoft Teams, open the same site's channel and select the <strong>Files</strong> tab to see how the content matches.</li>
+  </ul>
+  <p>
+    Practising this on two or three sites helps you build confidence quickly — most sites follow the same structure.
+  </p>
+</div>  
+   </section>
+
+      <aside>
+  <div class="section-block">
+  <h2>From Microsoft 365 to SharePoint</h2>
+  <p>
+    SharePoint lives inside your Microsoft 365 apps, and getting to it becomes second nature once you know where to look.
+    Here’s the simplest way to reach it anytime:
+  </p>
+  <ul class="steps">
+    <li>Go to <strong>office.com</strong> and sign in with your work or school account.</li>
+    <li>Select the <strong>app launcher</strong> (the 9-dot grid in the top-left corner).</li>
+    <li>Choose <strong>SharePoint</strong> from the list — or pin it so it always shows at the top.</li>
+  </ul>
+  <p>
+    You can also reach SharePoint by clicking the <strong>SharePoint</strong> icon directly in the left column on Office.com.
+    If you've opened sites recently, they’ll appear under “Recommended” or “Frequent”.
+  </p>
+  <div class="callout">
+    Tip: If you already work in Teams, remember that every team you’re part of has a SharePoint site behind it.
+    You’re using SharePoint more than you think.
+  </div>
+</div>
+
+
+      <div class="section-block">
+  <h2>Reading the SharePoint start page</h2>
+  <p>
+    When you open SharePoint, the home page acts like your personal dashboard.
+    It helps you quickly return to important sites and discover new updates across your organisation.
+  </p>
+  <ul>
+    <li><strong>Featured / News</strong> — important announcements, highlighted pages, or resources your organisation wants you to see.</li>
+    <li><strong>Frequent sites</strong> — SharePoint notices which sites you return to most often and surfaces them here.</li>
+    <li><strong>Followed sites</strong> — you can “follow” sites you care about; they’ll always appear in this list.</li>
+    <li><strong>Search bar</strong> — a powerful way to find files, people, sites, or pages, even if you only remember the name or a keyword.</li>
+  </ul>
+  <p>
+    Think of this page as your starting point — the more you use SharePoint, the more personalised this screen becomes.
+  </p>
+</div>
+      </aside>
+
+
+  <script>
+    const html = document.documentElement;
+    const storedTheme = localStorage.getItem("spTheme");
+
+    if (storedTheme === "dark" || storedTheme === "light") {
+      html.dataset.theme = storedTheme;
+    }
+
+    const themeToggle = document.getElementById("themeToggle");
+    if (themeToggle) {
+      themeToggle.addEventListener("click", () => {
+        const newTheme = html.dataset.theme === "dark" ? "light" : "dark";
+        html.dataset.theme = newTheme;
+        localStorage.setItem("spTheme", newTheme);
+      });
+    }
+  </script>
+</body>
+</html>

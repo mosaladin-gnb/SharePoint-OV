@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Top 10 SharePoint mistakes to avoid</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f3f4f7;
+      --bg-alt: #ffffff;
+      --border-soft: #d9dde6;
+      --accent: #c13b3b;
+      --accent-soft: #f6dddf;
+      --text-main: #1f2430;
+      --text-soft: #5c6475;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.03);
+    }
+    html[data-theme="dark"] {
+      --bg: #12141b;
+      --bg-alt: #191c25;
+      --border-soft: #2b3140;
+      --accent: #ff7070;
+      --accent-soft: #40252a;
+      --text-main: #f6f7fb;
+      --text-soft: #a9b1c5;
+      --shadow-soft: 0 12px 30px rgba(0,0,0,0.7);
+    }
+
+    html { font-size: 17px; transition: background-color .25s, color .25s; }
+    * { box-sizing:border-box; margin:0; padding:0;
+        font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+
+    body {
+      color: var(--text-main);
+      padding: 28px 14px 40px;
+      transition: background .25s, color .25s;
+    }
+html, body {
+  height: auto;
+  min-height: 100%;
+  background-attachment: fixed;
+}
+    html[data-theme="light"] body {
+      background: radial-gradient(circle at top right,#e4d5d7 0,var(--bg) 25%,var(--bg) 100%);
+    }
+    html[data-theme="dark"] body {
+      background: radial-gradient(circle at top right,#3b2830 0,var(--bg) 30%,var(--bg) 100%);
+    }
+
+    .shell { max-width: 1100px; margin:0 auto; }
+
+    .top-bar {
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:14px; gap:10px;
+    }
+    .back-link, .theme-toggle {
+      border-radius:999px; border:1px solid var(--border-soft);
+      background:var(--bg-alt); padding:6px 14px; font-size:.9rem;
+      color:var(--text-soft); display:inline-flex; align-items:center;
+      gap:6px; cursor:pointer; box-shadow:var(--shadow-soft);
+    }
+    .back-link { padding:6px 12px; }
+    h1 {
+      font-size:2.2rem; font-weight:720; letter-spacing:-0.02em;
+      margin-bottom:6px;
+    }
+    .subtitle { font-size:.98rem; color:var(--text-soft); max-width:760px; line-height:1.6; }
+
+    .panel {
+      background:var(--bg-alt); border-radius:24px; border:1px solid var(--border-soft);
+      box-shadow:var(--shadow-soft); padding:22px 22px 26px; margin-top:14px;
+    }
+    .panel h2 { font-size:1.25rem; margin-bottom:10px; }
+    .panel p { font-size:.96rem; color:var(--text-soft); line-height:1.6; }
+
+    .mistakes-grid {
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:14px;
+    }
+    .mistake-card {
+      border-radius:18px;
+      border:1px solid var(--border-soft);
+      background:#f8f8fb;
+      padding:12px 14px 14px;
+    }
+    html[data-theme="dark"] .mistake-card { background:#202333; }
+
+    .mistake-header {
+      display:flex; align-items:center; gap:10px; margin-bottom:6px;
+    }
+    .badge {
+      width:30px; height:30px; border-radius:30px;
+      display:flex; align-items:center; justify-content:center;
+      background:var(--accent-soft); color:var(--accent);
+      font-weight:650; font-size:.95rem;
+    }
+    .mistake-title {
+      font-weight:640; font-size:1rem;
+    }
+    .mistake-body {
+      font-size:.92rem; color:var(--text-soft); line-height:1.6; margin-bottom:4px;
+    }
+    .fix-label { font-size:.8rem; text-transform:uppercase; letter-spacing:.08em;
+                color:var(--accent); font-weight:600; }
+    .fix-text { font-size:.9rem; color:var(--text-soft); }
+
+    @media (max-width:900px){
+      .top-bar{flex-direction:row-reverse; justify-content:flex-end;}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="top-bar">
+      <button class="back-link" onclick="window.location.href='../Index.html'">‹ Back to hub</button>
+      <button class="theme-toggle" id="themeToggle">🌓 Toggle theme</button>
+    </div>
+
+    <header>
+      <h1>Top 10 SharePoint mistakes to avoid</h1>
+<p class="subtitle">
+  Here are the most common pitfalls people run into when working in SharePoint, along with easier,
+  cleaner ways to handle each situation. Use this as a quick guide to keep your sites organised and
+  frustration-free.
+</p>
+    </header>
+
+    <section class="panel">
+      <h2>Common pitfalls &amp; better alternatives</h2>
+      <p>
+  These examples highlight habits that often cause clutter, confusion, or extra work. The alternative
+  suggestions are simple improvements you can start using right away.
+</p>
+
+
+      <div class="mistakes-grid">
+        <div class="mistake-card">
+          <div class="mistake-header">
+            <div class="badge">1</div>
+            <div class="mistake-title">Using folders for everything</div>
+          </div>
+          <div class="mistake-body">
+Folders can get deep and messy quickly, making files harder to find and harder to manage.
+          </div>
+          <div class="fix-label">Better:</div>
+          <div class="fix-text">
+Use a few simple folders and let columns, filters, and views do the heavy lifting.
+          </div>
+        </div>
+
+        <div class="mistake-card">
+          <div class="mistake-header">
+            <div class="badge">2</div>
+            <div class="mistake-title">Dumping files in one giant library</div>
+          </div>
+          <div class="mistake-body">
+Putting all files into one place makes it hard to organise or tell what belongs where.
+          </div>
+          <div class="fix-label">Better:</div>
+          <div class="fix-text">
+Create separate libraries for different types of content so each area stays tidy <br></br>
+ (Projects, Templates, Reference, etc.).
+          </div>
+        </div>
+
+        <div class="mistake-card">
+          <div class="mistake-header">
+            <div class="badge">3</div>
+            <div class="mistake-title">Breaking inheritance everywhere</div>
+          </div>
+          <div class="mistake-body">
+Giving unique permissions to lots of files and folders makes access difficult to track.
+          </div>
+          <div class="fix-label">Better:</div>
+          <div class="fix-text">
+Keep permissions simple at the site or library level. Use individual sharing only when necessary.
+          </div>
+        </div>
+
+        <div class="mistake-card">
+          <div class="mistake-header">
+            <div class="badge">4</div>
+            <div class="mistake-title">Guests added without a plan</div>
+          </div>
+          <div class="mistake-body">
+Random guest access creates risk and confusion, especially when guests leave.
+          </div>
+          <div class="fix-label">Better:</div>
+          <div class="fix-text">
+Use dedicated external-facing sites and review guest access regularly.
+          </div>
+        </div>
+
+        <div class="mistake-card">
+          <div class="mistake-header">
+            <div class="badge">5</div>
+            <div class="mistake-title">Ignoring version history</div>
+          </div>
+          <div class="mistake-body">
+People often create multiple copies or accidentally overwrite content.
+          </div>
+          <div class="fix-label">Better:</div>
+          <div class="fix-text">
+Use version history to undo mistakes and keep a clean, single source of truth.
+          </div>
+        </div>
+
+        <div class="mistake-card">
+          <div class="mistake-header">
+            <div class="badge">6</div>
+            <div class="mistake-title">No home page or navigation</div>
+          </div>
+          <div class="mistake-body">
+If users land in a random library, they may not understand the purpose of the site.
+          </div>
+          <div class="fix-label">Better:</div>
+          <div class="fix-text">
+Create a simple home page and keep the navigation clear so the site feels intentional.
+          </div>
+        </div>
+
+        <div class="mistake-card">
+          <div class="mistake-header">
+            <div class="badge">7</div>
+            <div class="mistake-title">Duplicating teams &amp; sites</div>
+          </div>
+          <div class="mistake-body">
+Multiple spaces for the same work scatter conversations and documents.
+          </div>
+          <div class="fix-label">Better:</div>
+          <div class="fix-text">
+Reuse existing workspaces when possible and create new ones only when there’s a new audience or purpose.
+          </div>
+        </div>
+
+        <div class="mistake-card">
+          <div class="mistake-header">
+            <div class="badge">8</div>
+            <div class="mistake-title">Using SharePoint as a file share only</div>
+          </div>
+          <div class="mistake-body">
+You lose out on pages, lists, and all the tools that make SharePoint more than just storage – and users think “it’s just another drive.”
+          </div>
+          <div class="fix-label">Better:</div>
+          <div class="fix-text">
+Use pages, lists, links, and simple automation to make your site an actual hub.
+          </div>
+        </div>
+
+        <div class="mistake-card">
+          <div class="mistake-header">
+            <div class="badge">9</div>
+            <div class="mistake-title">No lifecycle or archive plan</div>
+          </div>
+          <div class="mistake-body">
+Old content builds up and makes everything harder to search or navigate.
+          </div>
+          <div class="fix-label">Better:</div>
+          <div class="fix-text">
+Decide what gets archived and when, then follow the same routine consistently.
+          </div>
+        </div>
+
+        <div class="mistake-card">
+          <div class="mistake-header">
+            <div class="badge">10</div>
+            <div class="mistake-title">Building alone without champions</div>
+          </div>
+          <div class="mistake-body">
+Sites don’t evolve well when only one person makes decisions or manages content.
+          </div>
+          <div class="fix-label">Better:</div>
+          <div class="fix-text">
+Involve a small group for feedback and shared ownership so the site grows with the team.
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const html = document.documentElement;
+    const stored = localStorage.getItem("spTheme");
+    if (stored === "dark" || stored === "light") html.dataset.theme = stored;
+
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      const newTheme = html.dataset.theme === "dark" ? "light" : "dark";
+      html.dataset.theme = newTheme;
+      localStorage.setItem("spTheme", newTheme);
+    });
+  </script>
+</body>
+</html>

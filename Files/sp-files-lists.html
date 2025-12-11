@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>SharePoint Basics – Files & Lists</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f3f4f7;
+      --bg-alt: #ffffff;
+      --border-soft: #d9dde6;
+      --accent: #02b887;
+      --accent-soft: #e1e7f7;
+      --text-main: #02b887;
+      --text-soft: #5c6475;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.03);
+      --shadow-strong: 0 12px 28px rgba(0, 0, 0, 0.05);
+    }
+
+    /* DARK MODE OVERRIDES */
+    html[data-theme="dark"] {
+      --bg: #12141b;
+      --bg-alt: #191c25;
+      --border-soft: #2b3140;
+      --accent: #b84b02;
+      --accent-soft: #293558;
+      --text-main: #b84b02;
+      --text-soft: #c3cfe8;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.6);
+      --shadow-strong: 0 16px 34px rgba(0, 0, 0, 0.7);
+    }
+
+    * { box-sizing:border-box; margin:0; padding:0;
+        font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+
+    /* shared body settings */
+    body {
+      color: var(--text-main);
+      padding: 32px 16px 40px;
+      transition: background 0.25s ease-out, color 0.25s ease-out;
+    }
+html, body {
+  height: auto;
+  min-height: 100%;
+  background-attachment: fixed;
+}
+
+    /* LIGHT THEME gradient */
+    html[data-theme="light"] body {
+      background: radial-gradient(
+        circle at top right,
+        #d3d5dd 0,
+        var(--bg) 25%,
+        var(--bg) 100%
+      );
+    }
+
+    /* DARK THEME gradient */
+    html[data-theme="dark"] body {
+      background: radial-gradient(
+        circle at top right,
+        #2f3446 0,
+        var(--bg) 30%,
+        var(--bg) 100%
+      );
+    }
+
+.wrap {
+  max-width:1100px;
+  margin:0 auto;
+  background: var(--bg-alt);
+  border-radius:22px;
+  border:1px solid var(--border-soft);
+  box-shadow:0 12px 30px rgba(0,0,0,0.06);
+  padding:22px 24px 26px;
+}
+
+html[data-theme="dark"] 
+.wrap {
+  box-shadow:0 12px 30px rgba(0,0,0,0.7);
+}
+
+
+    .back-link {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid var(--border-soft);
+      background:#ffffff;
+      font-size:0.8rem;
+      cursor:pointer;
+      margin-bottom:10px;
+    }
+.top-bar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+  gap:10px;
+}
+
+.back-link,
+.theme-toggle {
+  border-radius:999px;
+  border:1px solid var(--border-soft);
+  background:var(--bg-alt);
+  padding:6px 14px;
+  font-size:0.9rem;
+  color:var(--text-soft);
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  box-shadow:0 10px 26px rgba(0,0,0,0.03);
+}
+
+.back-link { padding:6px 12px; }
+
+.theme-toggle .icon { font-size:1.1rem; }
+
+    h1 { font-size:1.5rem; margin-bottom:4px; }
+    .subtitle { font-size:0.9rem; color:var(--text-soft); margin-bottom:16px; }
+
+    .layout {
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+      gap:20px;
+    }
+
+    .block {
+      border-radius:18px;
+      border:1px solid var(--border-soft);
+      background:#fafbfe;
+      padding:14px 16px;
+      margin-bottom:14px;
+    }
+
+    .block h2 {
+      font-size:1.05rem;
+      margin-bottom:6px;
+    }
+
+    .block p,
+    .block li {
+      font-size:0.92rem;
+      color:var(--text-soft);
+      line-height:1.6;
+    }
+
+    .block ul { margin-left:18px; margin-top:4px; }
+
+    .two-col {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:10px;
+      margin-top:8px;
+    }
+
+    .mini {
+      border-radius:14px;
+      border:1px dashed var(--border-soft);
+      background:#ffffff;
+      padding:10px 12px;
+      font-size:0.86rem;
+      color:var(--text-soft);
+    }
+
+/* Collapsible expander block */
+.expander {
+  margin-top: 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 10px 14px;
+  background: var(--bg-alt);
+  box-shadow: var(--shadow-soft);
+}
+
+.expander summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--accent);
+  outline: none;
+}
+
+.expander[open] summary {
+  color: var(--text-main);
+}
+
+.expander-content {
+  margin-top: 10px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+
+    @media (max-width:880px) {
+      .layout { grid-template-columns:minmax(0,1fr); }
+    }
+
+/* DARK MODE block surfaces */
+html[data-theme="dark"] .block {
+  background:#202333;
+}
+
+html[data-theme="dark"] .mini {
+  background:#191c25;
+}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top-bar">
+  <button class="back-link" onclick="window.location.href='../Index.html'">
+    ‹ Back to hub
+  </button>
+
+  <button class="theme-toggle" id="themeToggle">
+    <span class="icon">🌓</span>
+    <span class="label">Toggle theme</span>
+  </button>
+</div>
+    <h1>Working with files & lists</h1>
+    <p class="subtitle">
+      How SharePoint stores documents and simple data, and how it links to OneDrive and Teams.
+    </p>
+    <div class="layout">
+      <section>
+      <div class="block">
+  <h2>Document libraries</h2>
+  <p>
+    Document libraries are where your team stores and works on shared files. If you’ve ever used the
+    “Files” tab in Microsoft Teams, you’ve already used a SharePoint document library — they are the same thing.
+  </p>
+  <ul>
+    <li>Each site can have one or many libraries, depending on how organised the team wants to be.</li>
+    <li>Libraries store files along with helpful details like who edited them, when they were changed, and any custom columns you add.</li>
+    <li>You can switch between list, compact, and tile views depending on how you prefer to see your content.</li>
+    <li>Libraries integrate with OneDrive so you can <strong>sync</strong> files for offline work on your computer.</li>
+    <li>Metadata (columns) makes files easier to sort, group, filter, or search — especially in large libraries.</li>
+  </ul>
+</div>
+
+
+        <div class="block">
+  <h2>Version history & check-out</h2>
+  <p>
+    SharePoint keeps track of your file changes for you. If you ever make a mistake, delete something by accident,
+    or need an older version, SharePoint has your back.
+  </p>
+  <ul>
+    <li><strong>Version history</strong> lets you open, compare, or restore older versions of any file.</li>
+    <li>You can review who changed what and when — useful for collaboration or auditing.</li>
+    <li>Restoring a version doesn’t delete history; it simply becomes the newest version.</li>
+    <li><strong>Check-out</strong> is optional and used when you want full control while making changes.</li>
+    <li>Most teams work without check-out because real-time co-authoring already prevents conflicts.</li>
+  </ul>
+</div>
+
+<div class="block">
+<h2>How SharePoint Lists Compare to Excel</h2>
+  <details class="expander">
+    <summary class="expander-title">(Click to Expand) </summary>
+
+    <div class="expander-content" style="margin-top: 16px;">
+
+      <h3>Are Lists similar to Excel sheets?</h3>
+      <p>
+        In many ways, yes — SharePoint Lists feel like online spreadsheets. But they’re designed for teamwork,
+        consistency, and automation, making them more powerful than Excel for shared work.
+      </p>
+
+      <div class="mini">
+        <strong>How Lists are similar to Excel</strong>
+        <ul>
+          <li>They use rows and columns to store information.</li>
+          <li>You can sort, filter, and group data easily.</li>
+          <li>They support formulas through calculated columns.</li>
+          <li>You can export data to and from Excel at any time.</li>
+        </ul>
+      </div>
+
+      <h3 style="margin-top: 20px;">Where Lists are better than Excel</h3>
+
+      <div class="two-col">
+        <div class="mini">
+          <strong>✔ No version chaos</strong>
+          <ul>
+            <li>Everyone works in one live source of truth.</li>
+            <li>No “v3 FINAL FINAL” files floating around.</li>
+            <li>No risk of overwriting someone else’s changes.</li>
+          </ul>
+        </div>
+
+        <div class="mini">
+          <strong>✔ Built for collaboration</strong>
+          <ul>
+            <li>Multiple people can update at the same time.</li>
+            <li>No locked files or broken formulas.</li>
+            <li>Cleaner, more predictable behaviour than shared Excel sheets.</li>
+          </ul>
+        </div>
+
+        <div class="mini">
+          <strong>✔ Structured, consistent data</strong>
+          <ul>
+            <li>Columns have types like Date, Person, Yes/No, Choice, Number, etc.</li>
+            <li>Data stays clean and validated automatically.</li>
+            <li>Perfect for logs, trackers, and records.</li>
+          </ul>
+        </div>
+
+        <div class="mini">
+          <strong>✔ Custom views</strong>
+          <ul>
+            <li>Switch between list, gallery, calendar, or grouped views instantly.</li>
+            <li>Save views for yourself or the whole team.</li>
+            <li>No need for complex Excel filters.</li>
+          </ul>
+        </div>
+
+        <div class="mini">
+          <strong>✔ Automation-ready</strong>
+          <ul>
+            <li>Trigger emails, reminders, approvals, or workflows.</li>
+            <li>Connect easily with Power Automate, Power Apps, and Power BI.</li>
+            <li>Excel can’t automate itself without external tools.</li>
+          </ul>
+        </div>
+
+        <div class="mini">
+          <strong>✔ Permissions & security</strong>
+          <ul>
+            <li>Control who can read or edit the list.</li>
+            <li>Share specific items or views.</li>
+            <li>Excel loses all security once downloaded.</li>
+          </ul>
+        </div>
+
+        <div class="mini">
+          <strong>✔ Integrated with Microsoft 365</strong>
+          <ul>
+            <li>Shows inside Teams.</li>
+            <li>Feeds Power BI dashboards.</li>
+            <li>Stores structured data directly inside SharePoint sites.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 style="margin-top: 20px;">When Excel is still better</h3>
+      <div class="mini">
+        <ul>
+          <li>Heavy calculations and advanced formulas.</li>
+          <li>Pivot tables or deep analytics.</li>
+          <li>Complex financial models.</li>
+          <li>Multi-sheet workbooks with dependencies.</li>
+        </ul>
+      </div>
+
+      <p style="margin-top: 14px;">
+        A helpful way to think about it:
+        <strong>Excel is a calculator. SharePoint Lists are a shared online database.</strong>
+        They often work beautifully together — they just serve different purposes.
+      </p>
+    </div>
+  </details>
+</div>
+      </section>
+
+      <aside>
+        <div class="block">
+  <h2>Lists – simple structured data</h2>
+  <p>
+    Lists help teams track information in a clean, organised way. Think of them as smart online tables where
+    everyone can update information without needing Excel files floating around.
+  </p>
+  <ul>
+    <li>Lists are great for things like tasks, issues, contacts, equipment tracking, requests, or sign-ups.</li>
+    <li>You can add multiple types of columns — text, numbers, dates, choice fields, people fields and more.</li>
+    <li>Views let you show the same list in different ways: grouped, filtered, sorted, or visualised as a calendar or gallery.</li>
+    <li>You can create alerts when new items are added or changed.</li>
+    <li>Lists integrate with Power Automate for reminders, approvals, and simple workflows.</li>
+  </ul>
+</div>
+
+
+      <div class="block">
+  <h2>When to use a list</h2>
+  <p>
+    Lists shine when your team needs to track information that changes often. Instead of passing around spreadsheets,
+    SharePoint lists keep everything in one shared place where everyone sees the latest version.
+  </p>
+
+  <div class="two-col">
+    <div class="mini">
+      <strong>Team coordination</strong>
+      <ul>
+        <li>Tracking tasks across a project.</li>
+        <li>Logging issues or blockers for weekly check-ins.</li>
+        <li>Maintaining a shared team calendar or editorial schedule.</li>
+      </ul>
+    </div>
+
+    <div class="mini">
+      <strong>Operations & support</strong>
+      <ul>
+        <li>Managing equipment loans or inventory.</li>
+        <li>Recording incoming service requests or tickets.</li>
+        <li>Keeping a register of staff onboarding or training progress.</li>
+      </ul>
+    </div>
+
+    <div class="mini">
+      <strong>Administration</strong>
+      <ul>
+        <li>Tracking approvals and sign-offs.</li>
+        <li>Managing forms such as room bookings or budget requests.</li>
+        <li>Recording meeting notes or decisions in a structured way.</li>
+      </ul>
+    </div>
+
+    <div class="mini">
+      <strong>Planning & organising</strong>
+      <ul>
+        <li>Creating checklists for events or communications.</li>
+        <li>Maintaining lists of contacts, vendors, or partnerships.</li>
+        <li>Keeping track of key deadlines or milestones.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p style="margin-top:10px;">
+    If you find yourself updating the same spreadsheet over and over — or emailing it around — a SharePoint list
+    is usually a much cleaner and safer alternative.
+  </p>
+</div>
+
+      </aside>
+    </div>
+
+<!-- EXPANDABLE SECTION: Lists vs Excel -->
+
+  </div>
+
+
+
+<script>
+  const html = document.documentElement;
+  const storedTheme = localStorage.getItem("spTheme");
+
+  if (storedTheme === "dark" || storedTheme === "light") {
+    html.dataset.theme = storedTheme;
+  }
+
+  const themeToggle = document.getElementById("themeToggle");
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const newTheme = html.dataset.theme === "dark" ? "light" : "dark";
+      html.dataset.theme = newTheme;
+      localStorage.setItem("spTheme", newTheme);
+    });
+  }
+</script>
+</body>
+</html>
