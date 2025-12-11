@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>SharePoint Basics – Sharing & Permissions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f3f4f7;
+      --bg-alt: #ffffff;
+      --border-soft: #d9dde6;
+      --accent: #02b887;
+      --accent-soft: #e1e7f7;
+      --text-main: #02b887;
+      --text-soft: #5c6475;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.03);
+      --shadow-strong: 0 12px 28px rgba(0, 0, 0, 0.05);
+    }
+
+    /* DARK MODE OVERRIDES */
+    html[data-theme="dark"] {
+      --bg: #12141b;
+      --bg-alt: #191c25;
+      --border-soft: #2b3140;
+      --accent: #b84b02;
+      --accent-soft: #293558;
+      --text-main: #b84b02;
+      --text-soft: #c3cfe8;
+      --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.6);
+      --shadow-strong: 0 16px 34px rgba(0, 0, 0, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    html {
+      font-size: 17px;
+      transition: background-color 0.25s ease-out, color 0.25s ease-out;
+    }
+
+    /* shared body settings */
+    body {
+      color: var(--text-main);
+      padding: 32px 16px 40px;
+      transition: background 0.25s ease-out, color 0.25s ease-out;
+    }
+html, body {
+  height: auto;
+  min-height: 100%;
+  background-attachment: fixed;
+}
+
+    /* LIGHT THEME gradient */
+    html[data-theme="light"] body {
+      background: radial-gradient(
+        circle at top right,
+        #d3d5dd 0,
+        var(--bg) 25%,
+        var(--bg) 100%
+      );
+    }
+
+    /* DARK THEME gradient */
+    html[data-theme="dark"] body {
+      background: radial-gradient(
+        circle at top right,
+        #2f3446 0,
+        var(--bg) 30%,
+        var(--bg) 100%
+      );
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--bg-alt);
+      border-radius: 22px;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-strong);
+      padding: 22px 24px 26px;
+    }
+
+    html[data-theme="dark"] .wrap {
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    /* top bar & buttons */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 10px;
+    }
+
+    .back-link,
+    .theme-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-alt);
+      padding: 6px 14px;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .back-link {
+      padding: 6px 12px;
+    }
+
+    .theme-toggle .icon {
+      font-size: 1.1rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      margin-bottom: 16px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 20px;
+    }
+
+    .block {
+      border-radius: 18px;
+      border: 1px solid var(--border-soft);
+      background: #fafbfe;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    html[data-theme="dark"] .block {
+      background: #202333;
+    }
+
+    .block h2 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .block p,
+    .block li {
+      font-size: 0.92rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    .block ul {
+      margin-left: 18px;
+      margin-top: 4px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .mini {
+      border-radius: 14px;
+      border: 1px dashed var(--border-soft);
+      background: #ffffff;
+      padding: 10px 12px;
+      font-size: 0.86rem;
+      color: var(--text-soft);
+    }
+
+    html[data-theme="dark"] .mini {
+      background: #191c25;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 5px 11px;
+      border: 1px solid var(--border-soft);
+      background: #ffffff;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    html[data-theme="dark"] .pill {
+      background: #191c25;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top-bar">
+      <button class="back-link" onclick="window.location.href='../index.html'">
+        ‹ Back to hub
+      </button>
+      <button class="theme-toggle" id="themeToggle">
+        <span class="icon">🌓</span>
+        <span class="label">Toggle theme</span>
+      </button>
+    </div>
+
+    <h1>Sharing &amp; permissions</h1>
+    <p class="subtitle">
+      Show how to safely share files and sites, what the main permission levels mean,
+      and how this links back to Teams.
+    </p>
+
+    <div class="layout">
+      <section>
+        <div class="block">
+          <h2>Core concepts</h2>
+         <p>
+  When you work with files in SharePoint or Teams, the system decides what you can
+  see or do based on your permissions. Here’s what really matters:
+</p>
+<ul>
+  <li><strong>Site permissions</strong> decide who can access the entire site and its content.</li>
+  <li><strong>Library and file sharing</strong> lets you give access to individual items if someone
+      doesn’t need the whole site.</li>
+  <li><strong>Your identity = your access.</strong> SharePoint and Teams use your Microsoft 365 account,
+      so there are no shared logins or anonymous accounts to manage.</li>
+  <li>Most organisations use the “<em>least privilege</em>” approach — people get the minimum access they need to work.</li>
+</ul>
+        </div>
+
+        <div class="block">
+          <h2>Standard permission levels</h2>
+          <ul>
+  <li><strong>Read</strong> — you can open files, browse pages, and view lists, but you can’t change anything.</li>
+  <li><strong>Contribute / Edit</strong> — you can add new content, update existing content, and delete items you created.</li>
+  <li><strong>Full control</strong> — site owners manage structure, settings, and permissions for everyone else.</li>
+</ul>
+<p style="margin-top: 6px;">
+  Your organisation may use custom names like <em>Visitors</em>, <em>Members</em>, and <em>Owners</em>. 
+  Even if the labels differ, the idea behind each level stays the same. 
+</p>
+        </div>
+      </section>
+
+      <aside>
+        <div class="block">
+          <h2>Typical sharing scenarios</h2>
+          <div class="two-col">
+           <div class="mini">
+  Sharing with a colleague <strong><u>Inside</u></strong> your organisation:
+  <ul>
+    <li>Use the <strong>Share</strong> button on the file.</li>
+    <li>Type their name and select it when it appears.</li>
+    <li>Choose whether they can <strong>Edit</strong> or just <strong>View</strong>.</li>
+    <li>This is the quickest and safest way to give someone access to a single file.</li>
+  </ul>
+</div>
+
+           <div class="mini">
+  Sharing with someone <strong><u>Outside</u></strong> your organisation (when allowed):
+  <ul>
+    <li>Follow your organisation’s guest access rules — many require adding the person as a guest first.</li>
+    <li>Share only the specific site or folder they truly need.</li>
+    <li>Use link expiry dates or view-only links when working with sensitive information.</li>
+    <li>Guests sign in with their own account; no password sharing is needed.</li>
+  </ul>
+</div>
+          </div>
+        </div>
+
+        <div class="block">
+         <h2>When do you need to adjust permissions?</h2>
+<ul>
+  <li><strong>When a teammate joins your project</strong> and needs access to shared files or a specific site.</li>
+  <li><strong>When someone leaves the project</strong> and should no longer see or edit certain content.</li>
+  <li><strong>When working with sensitive documents</strong> where only a small group should have edit rights.</li>
+  <li><strong>When sharing with external partners</strong> and access must be limited or temporary.</li>
+  <li><strong>When a library grows</strong> and different groups need different levels of access to folders.</li>
+</ul>
+<p style="margin-top: 6px;">
+  Understanding when to share a <em>file</em> vs. when to change <em>site permissions</em> will help you work more confidently 
+  and avoid oversharing.
+</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const html = document.documentElement;
+    const storedTheme = localStorage.getItem("spTheme");
+
+    if (storedTheme === "dark" || storedTheme === "light") {
+      html.dataset.theme = storedTheme;
+    }
+
+    const themeToggle = document.getElementById("themeToggle");
+    if (themeToggle) {
+      themeToggle.addEventListener("click", () => {
+        const newTheme = html.dataset.theme === "dark" ? "light" : "dark";
+        html.dataset.theme = newTheme;
+        localStorage.setItem("spTheme", newTheme);
+      });
+    }
+  </script>
+</body>
+</html>
